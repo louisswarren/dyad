@@ -19,6 +19,7 @@ def read_loop(f):
         data = f.read()
         if data:
             sys.stdout.write(data)
+            sys.stdout.flush()
         else:
             time.sleep(0.1)
 
