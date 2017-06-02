@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import tempfile
+
+EDITOR = os.environ.get('EDITOR', 'vim')
+
+def input_new_names(old_names):
+    with tempfile.NamedTemporaryFile(suffix='.tmp') as fname_file:
+        fname_file.write(('\n'.join(old_names)).encode())
+        fname_file.flush()
+        subprocess.call(EDITOR.split() + [fname_file.name])
+        fname_file.seek(0)
+        new_contents = fname_file.read()
+    return new_contents.decode().strip().split('\n')
+
+def main(args):
+    targets = sorted(args)
+    destinations = input_new_names(targets)
+    for old, new in zip(targets, destinations):
+        os.rename(old, new)
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) > 1:
+        main(sys.argv[1:])
+    else:
+        main(os.listdir())

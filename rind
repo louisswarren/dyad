@@ -1,0 +1,2 @@
+#!/bin/sh
+find -L . -iregex ".*$1.*"

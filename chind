@@ -1,0 +1,12 @@
+#!/bin/bash
+# Find all files matching the given regex, and ask to pick one
+
+unset found i
+while IFS= read -r -d $'\0' f; do
+  found[i++]="$f"
+done < <(find -L . -iregex ".*$1.*" -type f -print0 )
+
+select fname in "${found[@]}"; do
+  echo "$fname"
+  break
+done
