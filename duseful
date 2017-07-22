@@ -1,0 +1,2 @@
+#!/bin/sh
+du -hd 1 2> /dev/null | sort -h
