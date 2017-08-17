@@ -3,9 +3,9 @@ from os import system
 from sys import argv
 
 # Example:
-#     yt foo bar
-# calls youtube-dl 'ytsearch:foo bar' --max-downloads 1 -o - | mpv - --no-video
+#     ytv foo bar
+# calls youtube-dl 'ytsearch:foo bar' --max-downloads 1 -o - | mpv -'
 
 call_str = 'youtube-dl "ytsearch:{}" --max-downloads 1 -o -' \
-           + ' | mpv - --no-video'
+           + ' | mpv -'
 system(call_str.format(' '.join(argv[1:])))
