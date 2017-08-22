@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 
+usage = """
+Usage: {} <mousename> <sensitivity>
+Use xinput to set the sensitivity of a given mouse.
+
+The mouse name must match the name given by xinput list. If multiple mice match
+this name, all will be set to the same sensitivity.
+""".strip()
+
 import re
 import subprocess
 import sys
 
 def run(*cmdlist, stderr=subprocess.STDOUT):
     return subprocess.check_output(cmdlist, stderr=stderr).decode()
+
+if len(sys.argv) != 3:
+    print(usage.format(sys.argv[0]))
+    sys.exit()
 
 _, mouse_name, sensitivity = sys.argv
 
