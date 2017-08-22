@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+
+import re
+import subprocess
+import sys
+
+def run(*cmdlist, stderr=subprocess.STDOUT):
+    return subprocess.check_output(cmdlist, stderr=stderr).decode()
+
+_, mouse_name, sensitivity = sys.argv
+
+inputs = run('xinput', 'list')
+mouse_inputs = [dev for dev in inputs.split('\n') if dev.find(mouse_name) >= 0]
+mouse_numbers = [re.search('id=(\d+)', dev)[1] for dev in mouse_inputs]
+
+for i, num in enumerate(mouse_numbers):
+    props = run('xinput', 'list-props', num)
+    prop = re.search(r'Coordinate Transformation Matrix \((\d+)\)', props)[1]
+    matrix = '{sens} 0 0 0 {sens} 0 0 0 1'.format(sens=sensitivity).split()
+    try:
+        run('xinput', 'set-prop', num, prop, *matrix)
+    except:
+        print("Couldn't set device")
+        print(mouse_inputs[i])
