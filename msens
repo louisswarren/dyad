@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from shpy.shpy import run
+
 usage = """
 Usage: {} <mousename> <sensitivity>
 Use xinput to set the sensitivity of a given mouse.
@@ -11,9 +13,6 @@ this name, all will be set to the same sensitivity.
 import re
 import subprocess
 import sys
-
-def run(*cmdlist, stderr=subprocess.STDOUT):
-    return subprocess.check_output(cmdlist, stderr=stderr).decode()
 
 if len(sys.argv) != 3:
     print(usage.format(sys.argv[0]))
