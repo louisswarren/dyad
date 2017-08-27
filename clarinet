@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 
+USAGE = """
+Usage: {} <pipepath>
+Create a named pipe, send its contents to stdout forever.
+
+Supplied pipe path must not exist.
+Warning: supplied pipe path will be deleted after a keyboard interrupt.
+""".strip()
+
 import os
 import sys
 import textwrap
 import time
-
-def usage():
-    print(textwrap.dedent("""
-    Usage: {} <pipepath>
-    Create a named pipe, send its contents to stdout forever.
-
-    Supplied pipe path must not exist.
-    Warning: supplied pipe path will be deleted after a keyboard interrupt.
-    """.format(sys.argv[0])).strip())
 
 def read_loop(f):
     while True:
@@ -46,4 +45,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 2:
         main(sys.argv[1])
     else:
-        usage()
+        print(USAGE.format(sys.argv[0]))
