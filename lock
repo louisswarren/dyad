@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+# Take a screenshot
+scrot /tmp/screen_locked.png
+
+# Pixellate it 10x
+mogrify -scale 10% -scale 1000% -blur 0x8 /tmp/screen_locked.png
+
+# Lock screen displaying this image.
+i3lock -i /tmp/screen_locked.png &
+
+# Remove screenshot from disk
+sleep 1
+rm /tmp/screen_locked.png
