@@ -16,4 +16,4 @@ if len(sys.argv[1]) < 2:
 
 fname = os.path.abspath(sys.argv[1])
 dirname = os.path.dirname(fname)
-run("feh", dirname, "--start-at", fname, *sys.argv[2:])
+run("feh", "--scale-down", dirname, "--start-at", fname, *sys.argv[2:])
