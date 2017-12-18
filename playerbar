@@ -4,6 +4,11 @@ import sys
 
 from shpy.shpy import *
 
+status = run('playerctl', 'status')
+if status != 'Playing\n':
+    print('Paused | ')
+    sys.exit()
+
 try:
     gvariant_data = run('playerctl', 'metadata')
 except Exception:
