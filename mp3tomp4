@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+
+if len(sys.argv) not in range(4, 7):
+    print("Usage:", sys.argv[0],
+            "<mp3file> <imgfile> <outputfile> [start] [duration]")
+    sys.exit(1)
+
+_, mp3file, imgfile, output, *extras = sys.argv
+
+mp3args = []
+
+if extras:
+    mp3args.append('-ss')
+    mp3args.append(extras.pop(0).strip())
+
+if extras:
+    mp3args.append('-t')
+    mp3args.append(extras.pop(0).strip())
+
+imgargs = '-f', 'image2', '-loop', '1'
+outargs = '-c:v', 'libx264', '-tune', 'stillimage', '-c:a', 'copy', '-shortest'
+
+subprocess.run(['ffmpeg', *imgargs, '-i', imgfile,
+                          *mp3args, '-i', mp3file,
+                          *outargs, output])
