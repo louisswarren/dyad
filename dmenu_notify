@@ -1,0 +1,5 @@
+#!/bin/sh
+target=$(dmenu_path | dmenu "$@")
+shell=${SHELL:-"/bin/sh"}
+output=$("$shell" <<< "$target")
+notify-send "$target" "$output"
