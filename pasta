@@ -1,0 +1,4 @@
+#!/bin/sh
+fname=$(stest -fl ~/pasta | sort -u | dmenu -i -l 10)
+ftype=$(file -b --mime-type ~/pasta/$fname)
+cat ~/pasta/$fname | xclip -t $ftype -selection clipboard
