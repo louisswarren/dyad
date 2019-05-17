@@ -1,2 +1,3 @@
 #!/bin/sh
-xclip -out | xargs youtube-dl -o - | mpv -
+notify-send -u low -a clipyt "Streaming youtube to mpv" "$(xclip -out)"
+xclip -out | xargs youtube-dl -f best -o - | mpv -
