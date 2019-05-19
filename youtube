@@ -1,0 +1,3 @@
+#!/bin/bash
+yt="youtube-dl --no-playlist -o -"
+$yt -f "bestvideo[height<=1080]" $1 | mpv - --audio-file <($yt -f bestaudio $1)

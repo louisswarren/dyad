@@ -1,3 +1,0 @@
-#!/bin/zsh
-notify-send -u low -a clipyt "Streaming youtube to mpv" "$(xclip -out)"
-xclip -out | xargs youtube-dl --no-playlist -f "bestvideo[height<=1080]" -o - | mpv - --audio-file <(xclip -out | xargs youtube-dl --no-playlist -f bestaudio -o -)
