@@ -20,6 +20,8 @@ def input_new_names(old_names):
 def main(args):
     targets = sorted(args)
     destinations = input_new_names(targets)
+    if len(targets) != len(destinations):
+        sys.exit("Different number of of new and old names. Aborting")
     for old, new in zip(targets, destinations):
         os.rename(old, new)
 
