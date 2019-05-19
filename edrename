@@ -3,6 +3,7 @@
 import os
 import subprocess
 import tempfile
+import sys
 
 EDITOR = os.environ.get('EDITOR', 'vim')
 
@@ -10,7 +11,8 @@ def input_new_names(old_names):
     with tempfile.NamedTemporaryFile(suffix='.tmp') as fname_file:
         fname_file.write(('\n'.join(old_names)).encode())
         fname_file.flush()
-        subprocess.call(EDITOR.split() + [fname_file.name])
+        if subprocess.call(EDITOR.split() + [fname_file.name]):
+            sys.exit(1)
         fname_file.seek(0)
         new_contents = fname_file.read()
     return new_contents.decode().strip().split('\n')
@@ -22,7 +24,6 @@ def main(args):
         os.rename(old, new)
 
 if __name__ == '__main__':
-    import sys
     if len(sys.argv) > 1:
         main(sys.argv[1:])
     else:
