@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $# -eq 0 ]; then
+	echo "Usage: $(basename -- $0) [FILE] ..."
+	echo
+	echo "Extract audio from a webm to oga"
+fi
+
+for x in "$@"; do
+	ffmpeg -i "$x" -vn -acodec copy "$(basename -- "$x" .webm).oga"
+done
