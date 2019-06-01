@@ -1,0 +1,12 @@
+#!/bin/sh
+dir="$1/"
+
+while (echo "$dir" | grep "/$") ; do
+	dir="$dir/$(ls -- "$dir" | dmenu -i -l 20)"
+done
+
+if [ -d "$dir" ] ; then
+	urxvt -cd "$dir"
+else
+	urxvt -cd "$(dirname -- "$dir")"
+fi
