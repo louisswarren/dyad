@@ -1,3 +1,11 @@
 #!/bin/bash
 yt="youtube-dl --no-playlist -o -"
-$yt -f "bestvideo[height<=1080]" $1 | mpv - --audio-file <($yt -f bestaudio $1)
+ytvideo="$yt --write-sub --embed-subs -f bestvideo[height<=1080]"
+ytaudio="$yt -f bestaudio"
+
+# subs will be written to the working directory
+mkdir -p /tmp/youtube
+cd /tmp/youtube
+$ytvideo -- $1 | mpv - --audio-file <($ytaudio -- $1)
+rm -f -- /tmp/youtube/-*.{srt,ass,vtt,lrc}
+rmdir --ignore-fail-on-non-empty /tmp/youtube
