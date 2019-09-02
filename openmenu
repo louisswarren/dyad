@@ -1,4 +1,5 @@
 #!/bin/sh
 cd ~
 files=$(find * -not -path "*/.git/*" -not -name "*.agdai")
-echo "$files" | dmenu -i -p "xdg-open" $@ | xargs xdg-open
+choice=$(echo "$files" | dmenu -i -p "xdg-open" $@)
+xdg-open "$choice"
