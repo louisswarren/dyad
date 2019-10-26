@@ -1,0 +1,6 @@
+#!/bin/sh
+manuals=$(man -k . | cut -d ' ' -f 1)
+choice=$(echo "$manuals" | dmenu -i -p "man" $@)
+if [ -n $choice ] ; then
+	urxvt -e $SHELL -c "man $choice"
+fi
