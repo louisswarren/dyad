@@ -1,7 +1,14 @@
 #!/bin/sh
-
+if [ -n "$1" ]; then
+	theme=$1
+elif [ -n "$BASE16_THEME" ]; then
+	theme=$BASE16_THEME
+else
+	>&2 echo "Error: BASE16_THEME not set, and no theme supplied"
+	exit 1
+fi
 {
-cat ~/.config/base16-xresources/xresources/base16-$BASE16_THEME-256.Xresources;
+cat ~/.config/base16-xresources/xresources/base16-$theme-256.Xresources;
 echo "base16.00: base00";
 echo "base16.01: base01";
 echo "base16.02: base02";
@@ -19,3 +26,4 @@ echo "base16.0D: base0D";
 echo "base16.0E: base0E";
 echo "base16.0F: base0F";
 } | xrdb -merge
+echo "Added base16-$theme to xrdb"
