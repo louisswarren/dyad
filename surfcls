@@ -1,5 +1,5 @@
 #!/bin/sh
 # Run surf with a given WM_CLASS
-surfid=`unbuffer surf -x "${@:2}" | head -n 1 &`
+surfid=`stdbuf -oL surf -x "${@:2}" | head -n 1 &`
 echo "$surfid"
 xprop -id "$surfid" -f WM_CLASS 8s -set WM_CLASS $1
