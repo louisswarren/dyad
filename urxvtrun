@@ -1,0 +1,4 @@
+#!/bin/sh
+wd=`dirname -- "$2"`
+fname=`basename -- "$2"`
+urxvt -cd "$wd" -e zsh -i -c "$1 '$fname'; zsh -i"
