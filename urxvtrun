@@ -1,4 +1,8 @@
 #!/bin/sh
+# Start urxvt in the directory of $2, running $1 on $2 interactively
 wd=`dirname -- "$2"`
 fname=`basename -- "$2"`
-urxvt -cd "$wd" -e zsh -i -c "$1 '$fname'; zsh -i"
+if [[ $wd != /* ]]; then
+	wd="$(pwd)/$wd"
+fi
+urxvt -cd "$wd" -e zsh -is $1 "$fname"
