@@ -25,5 +25,6 @@ echo "base16.0C: base0C";
 echo "base16.0D: base0D";
 echo "base16.0E: base0E";
 echo "base16.0F: base0F";
+cat ~/.Xresources
 } | xrdb -merge
 echo "Added base16-$theme to xrdb"
