@@ -1,0 +1,6 @@
+#!/bin/sh
+# Make the clipboard persistent by taking ownership of anything put on the
+# clipboard. Of course, this works only until this process is killed.
+while clipnotify; do
+	xclip -out -selection clipboard | xclip -selection clipboard
+done
