@@ -5,13 +5,14 @@
 # owns the selection.
 
 while clipnotify; do
-	if xclip -out -selection clipboard -t TARGETS | grep -q "^text/plain$"; then
+	# Find the possible mime types of the selection
+	ctypes=`xclip -out -selection clipboard -t TARGETS | grep '^.\+/.\+$'`
+	if [ -z "$ctypes" ] || (echo "$ctypes" | grep -q 'text/plain'); then
+		# If there are no results, or if plain is an option, use plain. Types
+		# like text/html won't paste into everything.
 		xclip -out -selection clipboard | xclip -selection clipboard
 	else
-		# If the selection is not text, the above will fail to preserve the
-		# mime type. We could get the correct type by using the same method as
-		# above, but that returns multiple possibilities ...
-		ftype=`xclip -out -selection clipboard | file -b --mime-type -`
-		xclip -out -selection clipboard | xclip -t "$ftype" -selection clipboard
+		ctype=`echo "$ctypes" | head -n 1`
+		xclip -out -selection clipboard | xclip -t "$ctype" -selection clipboard
 	fi
 done
