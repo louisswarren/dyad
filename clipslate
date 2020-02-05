@@ -1,6 +1,17 @@
 #!/bin/sh
-# Make the clipboard persistent by taking ownership of anything put on the
-# clipboard. Of course, this works only until this process is killed.
+# Make the clipboard persistent using xclip.
+#
+# This works by outputting the clipboard to a new xclip instance, which now
+# owns the selection.
+
 while clipnotify; do
-	xclip -out -selection clipboard | xclip -selection clipboard
+	if xclip -out -selection clipboard -t TARGETS | grep -q "^text/plain$"; then
+		xclip -out -selection clipboard | xclip -selection clipboard
+	else
+		# If the selection is not text, the above will fail to preserve the
+		# mime type. We could get the correct type by using the same method as
+		# above, but that returns multiple possibilities ...
+		ftype=`xclip -out -selection clipboard | file -b --mime-type -`
+		xclip -out -selection clipboard | xclip -t "$ftype" -selection clipboard
+	fi
 done
