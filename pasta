@@ -1,8 +1,9 @@
 #!/bin/sh
-fname=$(stest -fl ~/pasta | sort -u | dmenu -i -l 10)
-ftype=$(file -b --mime-type ~/pasta/$fname)
+pastadir="$HOME/pasta"
+fname=$(stest -fl "$pastadir" | sort -u | dmenu -i -l 10)
+ftype=$(file -b --mime-type "$pastadir/$fname")
 if [ "$ftype" != "text/plain" ]; then
-	cat ~/pasta/$fname | xclip -t $ftype -selection clipboard
+	xclip -t "$ftype" -selection clipboard "$pastadir/$fname"
 else
-	cat ~/pasta/$fname | xclip -selection clipboard
+	xclip -selection clipboard "$pastadir/$fname"
 fi
