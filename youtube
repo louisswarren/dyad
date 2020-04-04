@@ -1,4 +1,13 @@
 #!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 <url>"
+	echo
+	echo "Stream the given video using mpv."
+	echo "Combines the best video and audio streams, limiting to 1080p."
+	exit
+fi
+
 yt="youtube-dl --no-playlist -o -"
 ytvideo="$yt --write-sub --embed-subs -f bestvideo[height<=1080]"
 ytaudio="$yt -f bestaudio"
@@ -7,5 +16,5 @@ ytaudio="$yt -f bestaudio"
 mkdir -p /tmp/youtube
 cd /tmp/youtube
 $ytvideo -- "$1" | mpv - --audio-file=<($ytaudio -- "$1")
-rm -f -- /tmp/youtube/-*.{srt,ass,vtt,lrc}
+rm -f /tmp/youtube/-*.{srt,ass,vtt,lrc}
 rmdir --ignore-fail-on-non-empty /tmp/youtube
