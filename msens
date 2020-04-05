@@ -1,35 +1,20 @@
-#!/usr/bin/env python3
-
-USAGE = """
-Usage: {} <mousename> <sensitivity>
-Use xinput to set the sensitivity of a given mouse.
-
-The mouse name must match the name given by xinput list. If multiple mice match
-this name, all will be set to the same sensitivity.
-""".strip()
-
-import re
-import subprocess
-import sys
-
-from shpy.shpy import run
-
-if len(sys.argv) != 3:
-    print(USAGE.format(sys.argv[0]))
-    sys.exit()
-
-_, mouse_name, sensitivity = sys.argv
-
-inputs = run('xinput', 'list')
-mouse_inputs = [dev for dev in inputs.split('\n') if dev.find(mouse_name) >= 0]
-mouse_numbers = [re.search('id=(\d+)', dev)[1] for dev in mouse_inputs]
-
-for i, num in enumerate(mouse_numbers):
-    props = run('xinput', 'list-props', num)
-    prop = re.search(r'Coordinate Transformation Matrix \((\d+)\)', props)[1]
-    matrix = '{sens} 0 0 0 {sens} 0 0 0 1'.format(sens=sensitivity).split()
-    try:
-        run('xinput', 'set-prop', num, prop, *matrix)
-    except:
-        print("Couldn't set device")
-        print(mouse_inputs[i])
+#!/bin/sh
+if [ -z "$1" ]; then
+	echo "Usage: $0 <device> <accel>"
+	echo
+	echo "Set the mouse sensitivity (not acceleration)"
+	echo "The accel value between -1 and 1, where"
+	echo " -0.5 is "halved sensitivity,
+	echo "  0.0 is no change,"
+	echo "  0.5 is doubled sensitivity, etc."
+	echo
+	echo "Available devices:"
+    IFS=''
+    xinput list --name-only | while read name; do
+		if xinput list-props "pointer:$name" 2>/dev/null | grep -q "libinput Accel Speed"; then
+			echo "'$name'"
+		fi;
+	done
+    exit
+fi
+xinput set-prop "$1" "libinput Accel Speed" "$2"
