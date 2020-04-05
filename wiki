@@ -5,28 +5,29 @@ BROWSER="surfcls floating"
 HISTFILE="$HOME/.wiki_history"
 CACHEDIR="/tmp/wiki"
 
+# See https://gist.github.com/dannguyen/03a10e850656577cfb57
+WGETARGS="--span-hosts --convert-links --no-directories --page-requisites"
+
+
 # Allow a full stop at the end so that prefixes of previous searches work
-searchterm=`tac "$HISTFILE" | dmenu -p "Wikipedia" -i -l 10 | sed 's/\.$//'`
+rawquery=`tac "$HISTFILE" | dmenu -p "Wikipedia" -i -l 10 | sed 's/\.$//'`
+[ -z "$rawquery" ] && exit 1
 
-if [ -z "$searchterm" ]; then
-	exit 1
-fi
+query=`echo "$rawquery" | xargs`
+page="Special:Search?search=$query"
+url="https://en.wikipedia.org/wiki/$page"
 
-# A search term beginning with whitespace will not be added to history
-case "$searchterm" in
-	' '*) ;;
-	*)    echo "$searchterm" >> "$HISTFILE";;
+# A search term beginning with whitespace will not be added to history or cache
+case "$rawquery" in
+	' '*)
+		exec $BROWSER "$url"
+		;;
+	*)
+		echo "$query" >> "$HISTFILE"
+		if [ ! -f "$CACHEDIR/$page" ]; then
+			wget $WGETARGS --directory-prefix="$CACHEDIR" "$url"
+		fi
+		escapedpage="Special:Search%3Fsearch=$query" # Hacky
+		exec $BROWSER "file://$CACHEDIR/$escapedpage"
+		;;
 esac
-searchterm=`echo "$searchterm" | xargs`
-
-page="Special:Search?search=$searchterm"
-escapedpage="Special:Search%3Fsearch=$searchterm" # Hacky
-
-if [ ! -f "$CACHEDIR/$page" ]; then
-	# See https://gist.github.com/dannguyen/03a10e850656577cfb57
-	wget --span-hosts --convert-links \
-		--no-directories --page-requisites \
-		--directory-prefix=/tmp/wiki \
-		"https://en.wikipedia.org/wiki/$page"
-fi
-exec $BROWSER "file://$CACHEDIR/$escapedpage"
