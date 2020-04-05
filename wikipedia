@@ -1,13 +1,11 @@
 #!/bin/sh
-# Yes, I know wikipedia is not the only wiki
 
 BROWSER="surfcls floating"
-HISTFILE="$HOME/.wiki_history"
-CACHEDIR="/tmp/wiki"
+HISTFILE="$HOME/.wikipedia_history"
+CACHEDIR="/tmp/wikipedia"
 
 # See https://gist.github.com/dannguyen/03a10e850656577cfb57
 WGETARGS="--span-hosts --convert-links --no-directories --page-requisites"
-
 
 # Allow a full stop at the end so that prefixes of previous searches work
 rawquery=`tac "$HISTFILE" | dmenu -p "Wikipedia" -i -l 10 | sed 's/\.$//'`
