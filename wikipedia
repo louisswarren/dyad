@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BROWSER="surfcls floating"
+BROWSER="surfcls floating -z 1.1"
 HISTFILE="$HOME/.wikipedia_history"
 CACHEDIR="/tmp/wikipedia"
 
@@ -24,6 +24,7 @@ case "$rawquery" in
 		echo "$query" >> "$HISTFILE"
 		if [ ! -f "$CACHEDIR/$page" ]; then
 			wget $WGETARGS --directory-prefix="$CACHEDIR" "$url"
+			rm "$CACHEDIR/robots.txt"
 		fi
 		escapedpage="Special:Search%3Fsearch=$query" # Hacky
 		exec $BROWSER "file://$CACHEDIR/$escapedpage"
