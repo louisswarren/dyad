@@ -1,8 +1,0 @@
-#!/bin/sh
-if [[ $# -eq 2 ]] ; then
-	ffmpeg -ss "$2" -i "$1" -c copy "${1%.*}-${2/:/.}.${1##*.}"
-elif [[ $# -eq 3 ]] ; then
-	ffmpeg -ss "$2" -to "$3" -i "$1" -c copy "${1%.*}-${2/:/.}-${3/:/.}.${1##*.}"
-else
-	echo "Usage: trimvid <input.ext> <start> [end]"
-fi
