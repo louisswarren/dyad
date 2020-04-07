@@ -7,24 +7,12 @@ else
 	>&2 echo "Error: BASE16_THEME not set, and no theme supplied"
 	exit 1
 fi
+
 {
-cat ~/.config/base16-xresources/xresources/base16-$theme-256.Xresources;
-echo "base16.00: base00";
-echo "base16.01: base01";
-echo "base16.02: base02";
-echo "base16.03: base03";
-echo "base16.04: base04";
-echo "base16.05: base05";
-echo "base16.06: base06";
-echo "base16.07: base07";
-echo "base16.08: base08";
-echo "base16.09: base09";
-echo "base16.0A: base0A";
-echo "base16.0B: base0B";
-echo "base16.0C: base0C";
-echo "base16.0D: base0D";
-echo "base16.0E: base0E";
-echo "base16.0F: base0F";
+cat ~/.config/base16-xresources/xresources/base16-$theme-256.Xresources
+for i in $(seq 0 15); do
+	printf "base16.%02X: base%02X\n" $i $i
+done
 cat ~/.Xresources
 } | xrdb -merge
 echo "Added base16-$theme to xrdb"
