@@ -1,2 +1,0 @@
-#!/bin/sh
-youtube-dl "ytsearch:$*" --max-downloads 1 -o - | mpv - --no-video

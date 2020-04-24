@@ -1,0 +1,2 @@
+#!/bin/sh
+youtube-dl -o - --no-playlist -- "$1" | mpv - --no-video
