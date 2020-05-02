@@ -5,6 +5,4 @@ if [ -z "$1" ]; then
 	echo "Alternative to gksu, kdesu etc."
 	exit
 fi
-IFS=$'\n'
-args="$*"
-urxvt -g 80x2 -name floating -e zsh -c "echo \"$args\" | xargs -d '\n' verbosudo"
+urxvt -g 80x2 -name floating -e zsh -c 'verbosudo "$@"' verbosudo "$@"
