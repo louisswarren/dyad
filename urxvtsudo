@@ -1,6 +1,6 @@
 #!/bin/zsh
 if [ -z "$1" ]; then
-	echo "Usage: urxvtsudo [command]"
+	echo "Usage: urxvtsudo <command>"
 	echo
 	echo "Alternative to gksu, kdesu etc."
 	exit

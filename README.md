@@ -19,6 +19,11 @@ Opens your preferred text editor (vim), with the names/paths of the above files
 listed for you to edit. After the editor closes (successfully), the files are
 renamed.
 
+## urxvtsudo
+`urxvtsudo <command>`  
+Starts `urxvt`, running `sudo -k <command>`. Replacement for `gksudo`, in four
+lines of `zsh`.
+
 ## youtube
 `youtube <url>`  
 Stream the given youtube video in mpv, using both `bestaudio` and `bestvideo`
