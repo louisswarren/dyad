@@ -9,12 +9,12 @@ if [ -z "$1" ]; then
 	echo "  0.5 is doubled sensitivity, etc."
 	echo
 	echo "Available devices:"
-    IFS=''
-    xinput list --name-only | while read name; do
+	IFS=''
+	xinput list --name-only | while read name; do
 		if xinput list-props "pointer:$name" 2>/dev/null | grep -q "libinput Accel Speed"; then
 			echo "'$name'"
 		fi;
 	done
-    exit
+	exit
 fi
 xinput set-prop "$1" "libinput Accel Speed" "$2"
