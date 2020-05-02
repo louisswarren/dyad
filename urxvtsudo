@@ -7,4 +7,4 @@ if [ -z "$1" ]; then
 fi
 IFS=$'\n'
 args="$*"
-urxvt -name floating -e zsh -c "echo \"$args\" | xargs -d '\n' verbosudo"
+urxvt -g 80x2 -name floating -e zsh -c "echo \"$args\" | xargs -d '\n' verbosudo"
