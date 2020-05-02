@@ -1,0 +1,11 @@
+#!/bin/sh
+ps1esc="root@$(hostname):$(pwd)$"
+printf "$ps1esc"
+for arg in "$@"; do
+	case "$arg" in
+		*' '*) printf " '$arg'" ;;
+		*) printf " $arg" ;;
+	esac
+done
+echo
+sudo -k "$@"

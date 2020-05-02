@@ -5,4 +5,6 @@ if [ -z "$1" ]; then
 	echo "Alternative to gksu, kdesu etc."
 	exit
 fi
-urxvt -name floating -e zsh -c "echo \"root@\$(hostname):\$(pwd)$ $*\"; sudo -k $*"
+IFS=$'\n'
+args="$*"
+urxvt -name floating -e zsh -c "echo \"$args\" | xargs -d '\n' verbosudo"
