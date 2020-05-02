@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+	echo "Usage: urxvtsudo [command]"
+	echo
+	echo "Alternative to gksu, kdesu etc."
+	exit
+fi
+urxvt -name floating -e zsh -c "echo \"root@\$(hostname):\$(pwd)$ $*\"; sudo -k $*"
