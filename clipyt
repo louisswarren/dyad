@@ -1,3 +1,8 @@
 #!/bin/sh
-notify-send -u low -a clipyt "Streaming youtube to mpv" "$(xclip -out)"
-xclip -out | xargs youtube
+url=`xclip -out`
+notify-send -u low -a clipyt "Streaming to mpv" "$url"
+case "$url" in
+	*.youtube.com/*)   youtube "$url" || notify-send -a clipyt "Failed to stream" "$url" ;;
+	*://youtube.com/*) youtube "$url" || notify-send -a clipyt "Failed to stream" "$url" ;;
+	*)                 youtube-dl -o - -- "$url" | mpv - || notify-send -a clipyt "Failed to stream" "$url" ;;
+esac
