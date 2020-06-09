@@ -11,10 +11,11 @@ fi
 yt="youtube-dl --no-playlist -o -"
 ytvideo="$yt --write-sub --embed-subs -f bestvideo[height<=1080]"
 ytaudio="$yt -f bestaudio"
+mpvargs="--demuxer-max-bytes=1GiB"
 
 # subs will be written to the working directory
 mkdir -p /tmp/youtube
 cd /tmp/youtube
-$ytvideo -- "$1" | mpv - --audio-file=<($ytaudio -- "$1")
+$ytvideo -- "$1" | mpv $mpvargs - --audio-file=<($ytaudio -- "$1")
 rm -f /tmp/youtube/-*.{srt,ass,vtt,lrc}
 rmdir --ignore-fail-on-non-empty /tmp/youtube
