@@ -1,20 +1,27 @@
 #!/bin/sh
-if [ -z "$1" ]; then
-	echo "Usage: $0 <device> <accel>"
-	echo
-	echo "Set the mouse sensitivity (not acceleration)"
-	echo "The accel value between -1 and 1, where"
-	echo " -0.5 is "halved sensitivity,
-	echo "  0.0 is no change,"
-	echo "  0.5 is doubled sensitivity, etc."
-	echo
-	echo "Available devices:"
-	IFS=''
-	xinput list --name-only | while read name; do
-		if xinput list-props "pointer:$name" 2>/dev/null | grep -q "libinput Accel Speed"; then
-			echo "'$name'"
-		fi;
-	done
-	exit
+PROPNAME='libinput Accel Speed'
+
+if [ -n "$1" ]; then
+	xinput set-prop "$1" "$PROPNAME" "$2"
+	exit 0;
 fi
-xinput set-prop "$1" "libinput Accel Speed" "$2"
+
+cat << EOF
+usage: $0 <device> <accel>
+
+Set the mouse sensitivity (not acceleration)
+The accel value between -1 and 1, where
+ -0.5 is halved sensitivity,
+  0.0 is no change,
+  0.5 is doubled sensitivity, etc.
+
+Available devices:
+EOF
+
+IFS=''
+xinput list --name-only | while read name; do
+	al=`xinput list-props "pointer:$name" 2>/dev/null | grep "$PROPNAME ("`
+	if [ -n "$al" ]; then
+		echo "'$name' ($(echo "$al" | cut -f 3))"
+	fi
+done
