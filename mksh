@@ -1,0 +1,17 @@
+#!/bin/sh
+if [ $# -eq 0 ]; then
+	echo "Usage: mksh FILE"
+	echo "If FILE does not include a path, it will be put in $$HOME/bin"
+	exit
+fi
+
+if [ "$1" = "$(basename -- "$1")" ]; then
+	fname="$HOME/bin/$1"
+else
+	fname="$1"
+fi
+
+[ -e "$fname" ] || echo '#!/bin/sh' > "$fname"
+[ -x "$fname" ] || chmod +x "$fname"
+
+exec $EDITOR "$fname"
