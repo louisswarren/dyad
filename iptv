@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# iptv.m3u8 example:
+#	# Channel foo
+#	http://example.com/foo.m3u8
+#	# Bar TV
+#	http://example.com/bar.m3u8
+filename=~/.config/iptv.m3u8
+
+dmenu='dmenu -i -l 50 -p Channel'
+channel=`awk 'NR % 2 == 1 {$1=""; print (NR+1)/2 $0}' $filename | $dmenu`
+[ -z $channel ] && exit
+
+num="${channel%%' '*}"
+url=`awk "NR == $num * 2" $filename`
+
+notify-send -u low -a iptv "Playing ${channel#*' '}"
+mpv "$url"
