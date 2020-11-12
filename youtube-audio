@@ -1,2 +1,2 @@
 #!/bin/sh
-youtube-dl -o - --no-playlist -- "$1" | mpv - --no-video
+youtube-dl -f bestaudio/best -o - --no-playlist -- "$1" | mpv - --no-video
