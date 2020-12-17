@@ -14,8 +14,10 @@ ytaudio="$yt -f bestaudio"
 mpvargs="--demuxer-max-bytes=1GiB"
 
 # subs will be written to the working directory
-mkdir -p /tmp/youtube
-cd /tmp/youtube
+tmpd=`mktemp -d`
+# Paranoid about deleting the wrong thing. Should really use ${TMPDIR:-/tmp}
+[ `dirname -- "$tmpd"` = "/tmp" ] || exit 1
+trap "rm -rf '$tmpd'" 0 1 2 3 15
+
+cd "$tmpd"
 $ytvideo -- "$1" | mpv $mpvargs - --audio-file=<($ytaudio -- "$1")
-rm -f /tmp/youtube/-*.{srt,ass,vtt,lrc}
-rmdir --ignore-fail-on-non-empty /tmp/youtube
