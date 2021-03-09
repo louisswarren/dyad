@@ -1,0 +1,22 @@
+#!/bin/sh
+DIR="/local/video"
+WATCHED_FILE="$HOME/.config/mediaplay_watched"
+WATCHED_PREFIX="> "
+
+function choose_media() {
+	find "$DIR" -type f | while read -r fname; do
+		if (grep -Fqx "$fname" "$WATCHED_FILE"); then
+			echo "$WATCHED_PREFIX$fname"
+		else
+			echo "$fname"
+		fi
+	done
+}
+
+sel=`choose_media | sort -f | dmenu -i "$@"`
+f="${sel#$WATCHED_PREFIX}"
+echo "Selected $f"
+
+if (mpv --quiet -- "$f" | tail -n 1 | grep "End of file"); then
+	echo "$f" >> "$WATCHED_FILE"
+fi
