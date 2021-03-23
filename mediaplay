@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 DIR="/local/video"
 WATCHED_FILE="$HOME/.config/mediaplay_watched"
 WATCHED_PREFIX="> "
 
-function choose_media() {
+choose_media() {
 	find "$DIR" -type f | while read -r fname; do
 		if (grep -Fqx "$fname" "$WATCHED_FILE"); then
 			echo "$WATCHED_PREFIX$fname"
