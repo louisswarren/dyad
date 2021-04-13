@@ -9,13 +9,15 @@ EDITOR = os.environ.get('EDITOR', 'vim')
 
 def input_new_names(old_names):
     with tempfile.NamedTemporaryFile(suffix='.tmp') as fname_file:
-        fname_file.write(('\n'.join(old_names)).encode())
+        for old_name in old_names:
+            fname_file.write((old_name.replace('\n', '\0') + '\n').encode())
         fname_file.flush()
         if subprocess.call(EDITOR.split() + [fname_file.name]):
             sys.exit(1)
         fname_file.seek(0)
         new_contents = fname_file.read()
-    return new_contents.decode().strip().split('\n')
+    new_contents_lines = new_contents.decode().strip().split('\n')
+    return [line.replace('\0', '\n') for line in new_contents_lines]
 
 def main(args):
     targets = sorted(args)
