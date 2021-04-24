@@ -23,14 +23,20 @@ def get_new_names(targets):
 
 def main(args):
     targets = sorted(args)
-    destinations = get_new_names(targets)
-    for t, d in zip(targets, destinations):
-        if not d:
-            sys.exit(f"Cannot rename {t} to empty filename. Aborting.")
-    if len(targets) != len(destinations):
-        sys.exit("Different number of of new and old names. Aborting.")
-    if len(destinations) != len(set(destinations)):
-        sys.exit("Filenames must all be unique. Aborting.")
+    destinations = targets
+    contmsg = "Press enter to continue."
+    while True:
+        destinations = get_new_names(destinations)
+        if not all(destinations):
+            input(f"Cannot rename to empty filename.\n{contmsg}")
+            continue
+        if len(targets) != len(destinations):
+            input(f"Different number of of new and old names.\n{contmsg}")
+            continue
+        if len(destinations) != len(set(destinations)):
+            input(f"Filenames must all be unique.\n{contmsg}")
+            continue
+        break
     for old, new in zip(targets, destinations):
         os.rename(old, new)
 
