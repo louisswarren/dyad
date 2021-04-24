@@ -7,23 +7,30 @@ import sys
 
 EDITOR = os.environ.get('EDITOR', 'vim')
 
-def input_new_names(old_names):
-    with tempfile.NamedTemporaryFile(suffix='.tmp') as fname_file:
-        for old_name in old_names:
-            fname_file.write((old_name.replace('\n', '\0') + '\n').encode())
-        fname_file.flush()
-        if subprocess.call(EDITOR.split() + [fname_file.name]):
+def run_editor(s):
+    with tempfile.NamedTemporaryFile(suffix='.tmp') as f:
+        f.write(s.encode())
+        f.flush()
+        if subprocess.call(EDITOR.split() + [f.name]):
             sys.exit(1)
-        fname_file.seek(0)
-        new_contents = fname_file.read()
-    new_contents_lines = new_contents.decode().strip().split('\n')
-    return [line.replace('\0', '\n') for line in new_contents_lines]
+        f.seek(0)
+        return f.read().decode()
+
+def get_new_names(targets):
+    target_doc = '\n'.join(t.replace('\n', '\0') for t in targets)
+    destination_doc = run_editor(target_doc).strip()
+    return [d.replace('\0', '\n') for d in destination_doc.split('\n')]
 
 def main(args):
     targets = sorted(args)
-    destinations = input_new_names(targets)
+    destinations = get_new_names(targets)
+    for t, d in zip(targets, destinations):
+        if not d:
+            sys.exit(f"Cannot rename {t} to empty filename. Aborting.")
     if len(targets) != len(destinations):
-        sys.exit("Different number of of new and old names. Aborting")
+        sys.exit("Different number of of new and old names. Aborting.")
+    if len(destinations) != len(set(destinations)):
+        sys.exit("Filenames must all be unique. Aborting.")
     for old, new in zip(targets, destinations):
         os.rename(old, new)
 
