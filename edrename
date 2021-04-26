@@ -5,43 +5,57 @@ import subprocess
 import tempfile
 import sys
 
-EDITOR = os.environ.get('EDITOR', 'vim')
+EDITOR_PATH = os.environ.get('EDITOR', 'vim')
 
 def run_editor(s):
+    '''Co-routine for editing a temporary file.'''
     with tempfile.NamedTemporaryFile(suffix='.tmp') as f:
         f.write(s.encode())
         f.flush()
-        if subprocess.call(EDITOR.split() + [f.name]):
-            sys.exit(1)
-        f.seek(0)
-        return f.read().decode()
+        while True:
+            if subprocess.call(EDITOR_PATH.split() + [f.name]):
+                sys.exit(1)
+            f.seek(0)
+            yield f.read().decode()
+
+def validate_names(destinations, n):
+    if not all(destinations):
+        print(f"Cannot rename to empty filename.")
+        return False
+    if len(destinations) != n:
+        print(f"Different number of of new and old names.")
+        return False
+    if len(destinations) != len(set(destinations)):
+        print(f"Filenames must all be unique.")
+        return False
+    return True
 
 def get_new_names(targets):
     target_doc = '\n'.join(t.replace('\n', '\0') for t in targets)
-    destination_doc = run_editor(target_doc).strip()
-    return [d.replace('\0', '\n') for d in destination_doc.split('\n')]
+    editor = run_editor(target_doc)
+    errprompt = "Try again? [Y/n] "
+    for destination_doc in editor:
+        # Trim trailing newline so we don't get an extra empty destination
+        if destination_doc[-1] == '\n':
+                destination_doc = destination_doc[:-1]
+        destinations = [d.replace('\0', '\n') for d in destination_doc.split('\n')]
+        if validate_names(destinations, len(targets)):
+            return destinations
+        while (choice := input(errprompt)).lower() not in 'yn':
+            continue
+        if choice == 'n':
+                sys.exit(1)
+    sys.exit(1)
 
-def main(args):
+def edmv(args):
     targets = sorted(args)
-    destinations = targets
-    contmsg = "Press enter to continue."
-    while True:
-        destinations = get_new_names(destinations)
-        if not all(destinations):
-            input(f"Cannot rename to empty filename.\n{contmsg}")
-            continue
-        if len(targets) != len(destinations):
-            input(f"Different number of of new and old names.\n{contmsg}")
-            continue
-        if len(destinations) != len(set(destinations)):
-            input(f"Filenames must all be unique.\n{contmsg}")
-            continue
-        break
-    for old, new in zip(targets, destinations):
-        os.rename(old, new)
+    destinations = get_new_names(targets)
+    if destinations:
+        for old, new in zip(targets, destinations):
+            os.rename(old, new)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        main(sys.argv[1:])
+        edmv(sys.argv[1:])
     else:
-        main(os.listdir())
+        edmv(os.listdir())
