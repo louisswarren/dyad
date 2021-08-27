@@ -1,0 +1,13 @@
+#!/bin/sh
+git -C "$XDG_CONFIG_HOME" ls-tree -r --name-only master | while read -r f; do
+	case "$f" in
+		.gitignore)  continue;;
+		.gitmodules) continue;;
+		setup.sh)    continue;;
+		*)
+			echo "$f"
+			;;
+	esac
+done | dmenu | { read -r confile;
+	alacritty -e $EDITOR "$XDG_CONFIG_HOME/$confile"
+}
