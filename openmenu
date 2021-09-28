@@ -1,5 +1,8 @@
 #!/bin/sh
-cd ~
-files=$(find * -not -path "*/.git/*" -not -name "*.agdai")
+files=$(locate -d "$XDG_CACHE_HOME/home_db" *)
 choice=$(echo "$files" | dmenu -i -p "xdg-open" $@)
-xdg-open "$choice"
+if [ -n "$choice" ]; then
+	xdg-open "$choice"
+else
+	updatedb -l 0 -o "$XDG_CACHE_HOME/home_db" -U "$HOME" --add-prunepaths "/home/louis/.cache /home/louis/.local/share /home/louis/.mozilla /home/louis/old"
+fi
