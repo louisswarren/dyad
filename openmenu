@@ -1,8 +1,29 @@
 #!/bin/sh
-files=$(locate -d "$XDG_CACHE_HOME/home_db" *)
-choice=$(echo "$files" | dmenu -i -p "xdg-open" $@)
-if [ -n "$choice" ]; then
-	xdg-open "$choice"
-else
-	updatedb -l 0 -o "$XDG_CACHE_HOME/home_db" -U "$HOME" --add-prunepaths "/home/louis/.cache /home/louis/.local/share /home/louis/.mozilla /home/louis/old"
+
+if [ -e "$XDG_CACHE_HOME/openmenu_list" ]; then
+	choice=$(dmenu -i -p "xdg-open" "$@" < "$XDG_CACHE_HOME/openmenu_list")
+	if [ -n "$choice" ]; then
+		exec xdg-open "$f"
+	fi
 fi
+
+# Using locate since it makes it easy to find things, but then immediately
+# post-processing it to plaintext.
+
+# Ignored directories
+echo "$HOME/.cache" \
+	 "$HOME/.local/share" \
+	 "$HOME/.mozilla" \
+	 "$HOME/old" \
+| xargs -0 updatedb -l 0 -o "$XDG_CACHE_HOME/openmenu.db" -U "$HOME" -e
+locate -d "$XDG_CACHE_HOME/openmenu.db" * | while read -r f; do
+	case "$f" in
+		# Wildcard blacklist
+		*.aux) ;;
+		*.o) ;;
+		*.o.d) ;;
+		*)
+			# Strip the initial $HOME
+			echo "${f#$HOME/}" ;;
+	esac
+done > "$XDG_CACHE_HOME/openmenu_list"
