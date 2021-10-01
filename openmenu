@@ -1,13 +1,13 @@
 #!/bin/sh
+cd ~
 
 if [ -e "$XDG_CACHE_HOME/openmenu_list" ]; then
-	choice=$(dmenu -i -p "xdg-open" "$@" < "$XDG_CACHE_HOME/openmenu_list")
-	if [ -n "$choice" ]; then
+	f=$(dmenu -i -p "xdg-open" "$@" < "$XDG_CACHE_HOME/openmenu_list")
+	if [ -n "$f" ]; then
 		exec xdg-open "$f"
 	fi
 fi
 
-cd ~
 find . -type f \
 	\
 	-not -path '*/\.git/*' \
