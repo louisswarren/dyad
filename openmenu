@@ -7,23 +7,24 @@ if [ -e "$XDG_CACHE_HOME/openmenu_list" ]; then
 	fi
 fi
 
-# Using locate since it makes it easy to find things, but then immediately
-# post-processing it to plaintext.
-
-# Ignored directories
-echo "$HOME/.cache" \
-	 "$HOME/.local/share" \
-	 "$HOME/.mozilla" \
-	 "$HOME/old" \
-| xargs -0 updatedb -l 0 -o "$XDG_CACHE_HOME/openmenu.db" -U "$HOME" -e
-locate -d "$XDG_CACHE_HOME/openmenu.db" * | while read -r f; do
-	case "$f" in
-		# Wildcard blacklist
-		*.aux) ;;
-		*.o) ;;
-		*.o.d) ;;
-		*)
-			# Strip the initial $HOME
-			echo "${f#$HOME/}" ;;
-	esac
-done > "$XDG_CACHE_HOME/openmenu_list"
+cd ~
+find . -type f \
+	\
+	-not -path '*/\.git/*' \
+	-not -path '*/\.hg/*' \
+	-not -path '*/\.svn/*' \
+	\
+	-not -name '*.aux' \
+	-not -name '*.db' \
+	-not -name '*.o' \
+	\
+	-not -path './.cache/*' \
+	-not -path './.config/Signal/*' \
+	-not -path './.config/base16-*' \
+	-not -path './.config/discord/*' \
+	-not -path './.local/share/*' \
+	-not -path './.mozilla/*' \
+	-not -path './.zoom/*' \
+	-not -path './git/*' \
+	-not -path './old/*' \
+> "$XDG_CACHE_HOME/openmenu_list"
