@@ -1,2 +1,2 @@
 #!/bin/sh
-du -hd 1 2> /dev/null | sort -h
+du -hxd 1 2> /dev/null | sort -h
