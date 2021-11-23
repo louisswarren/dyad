@@ -1,0 +1,11 @@
+#!/bin/zsh
+if [ -z "$1" ]; then
+	echo "Usage: alacrittysudo <command>"
+	echo
+	echo "Alternative to gksu, kdesu etc."
+	exit
+fi
+cmdstr="$(pwd)\$$(for arg in "$@"; do printf ' %q' "$arg"; done)"
+prompt="[urxvtsudo] password for %p to run as %U on %h: "
+command="echo '$cmdstr'; sudo -p '$prompt' -k \"\$@\""
+alacritty -o window.dimensions.columns=80 -o window.dimensions.lines=2 --class floating -e zsh -c "$command" sudo "$@"
