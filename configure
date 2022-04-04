@@ -9,6 +9,8 @@ git -C "$XDG_CONFIG_HOME" ls-tree -r --name-only master | while read -r f; do
 			;;
 	esac
 done | dmenu -l 10 | { read -r confile;
-	alacritty -e $EDITOR "$XDG_CONFIG_HOME/$confile"
+	if [ -n "$confile" ]; then
+		alacritty -e $EDITOR "$XDG_CONFIG_HOME/$confile"
+		make -C "$XDG_CONFIG_HOME"
+	fi
 }
-make -C "$XDG_CONFIG_HOME"
