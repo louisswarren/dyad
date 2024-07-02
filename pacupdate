@@ -1,0 +1,28 @@
+#!/bin/sh
+
+news=$(pacnews)
+if [ -n "$news" ]; then
+	echo "$news" | less
+fi
+echo "$news"
+
+sudo pacman -Sy --needed --noconfirm archlinux-keyring
+
+if [ "$1" = "partial" ]; then
+	sudo pacman -Su --ignore 'linux*'
+else
+	sudo pacman -Su "$@"
+fi
+
+pacaur -u --noedit || exit 1
+
+sudo paccache -rk1
+sudo paccache -ruk0
+pacaur -Sac --noconfirm
+
+pacnew=`find /etc -name '*.pacnew' 2>/dev/null | sort`
+if [ -n "$pacnew" ]; then
+	echo
+	echo "New /etc files to merge:"
+	echo "$pacnew"
+fi
